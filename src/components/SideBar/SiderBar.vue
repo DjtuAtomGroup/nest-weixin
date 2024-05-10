@@ -32,6 +32,9 @@ const checkRoute = () => {
       case 'notice' :
         defaultActive.value = '4'
             break;
+      case 'userInfo' :
+        defaultActive.value = '5'
+            break;
     }
   }
 }
@@ -64,6 +67,13 @@ const jumpToNot = () => {
     message: '通知',
   })
 }
+const jumpToUser = () => {
+  router.push('/userInfo')
+  ElMessage({
+    type: "success",
+    message: '个人信息',
+  })
+}
 //om
 onMounted(() => {
   checkRoute()
@@ -86,7 +96,7 @@ watch(() => route.fullPath,() => {
         active-text-color="#67C23A"
         :collapse="store.collapse"
     >
-      <el-menu-item>
+      <el-menu-item index="5" @click="jumpToUser">
         <div class="w-10 h-10 relative flex mx-auto my-auto">
           <el-avatar
               :icon="UserFilled"

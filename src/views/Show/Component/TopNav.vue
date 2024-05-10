@@ -3,6 +3,11 @@ import { ref } from "vue";
 
 //nest logo
 const nest = ref('https://nestjs.com/img/logo-small.svg')
+
+//github
+const jumpToGit = () => {
+  window.location.href = 'https://github.com/FluffyChi-Xing/nest-weixin.git'
+}
 </script>
 
 <template>
@@ -25,8 +30,9 @@ const nest = ref('https://nestjs.com/img/logo-small.svg')
     <!-- 右侧 -->
     <div class="w-[240px] h-full relative flex">
       <!-- 夜间模式 -->
+      <div></div>
       <!-- github -->
-      <div class="w-8 h-8 relative block overflow-hidden my-auto ml-auto cursor-pointer">
+      <div @click="jumpToGit" class="w-8 h-8 relative block overflow-hidden my-auto ml-auto cursor-pointer">
         <img src="../../../assets/image/github.png" alt="github" class="w-full h-full relative block object-contain">
       </div>
     </div>

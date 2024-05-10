@@ -45,6 +45,11 @@ const router = createRouter({
           component: NoticePage,
         },
         {
+          path: '/userInfo',
+          name: 'userInfo',
+          component: UserInfo,
+        },
+        {
           path: '/chat',
           name: 'chat',
           component: ChatPage,

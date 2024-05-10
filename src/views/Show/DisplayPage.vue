@@ -64,7 +64,7 @@ const start = () => {
             </div>
             <!-- description -->
             <div class="w-full h-full relative block text-left font-thin">
-              这是一个基于nest的会议室预约项目
+              这是一个基于nest的在线聊天室项目
             </div>
           </div>
           <!-- 2 -->
