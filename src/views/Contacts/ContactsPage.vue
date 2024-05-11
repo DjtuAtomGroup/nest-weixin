@@ -1,50 +1,99 @@
 <script setup>
-import { ref } from "vue";
+import { ref,reactive } from "vue";
+import { onMounted } from "vue";
+import axios from "axios";
+import {ElMessage} from "element-plus";
 
 //value
-const value = ref()
-//table
-const table = ref([
-  {
-    id: 1,
-    img: 'https://picsum.photos/200/300?1',
-    name: '张三',
+const from = reactive({
+  search: {
+    name: '',
   },
-  {
-    id: 2,
-    img: 'https://picsum.photos/200/300?2',
-    name: '李四',
-  },
-  {
-    id: 3,
-    img: 'https://picsum.photos/200/300?3',
-    name: '小明',
-  },
-  {
-    id: 4,
-    img: 'https://picsum.photos/200/300?4',
-    name: '小红',
+  add: {
+    name: ''
   }
-])
+})
+//total
+const total = ref()
+
+//table
+const table = ref()
+//pull data
+const pullAll = () => {
+  const access = localStorage.getItem('access').toString();
+  axios.get('http://localhost:3000/user/pullUsers',{
+    headers: {
+      Authorization: `Bearer ${access}`,
+    }
+  }).then((res) => {
+    if (res.data.code === 200) {
+      table.value = res.data.data;
+      total.value = res.data.totalCount * 10;
+      ElMessage({
+        type: "success",
+        message: res.data.message,
+      })
+    } else {
+      ElMessage({
+        type: "warning",
+        message: res.data.message,
+      })
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+//search one
+const searchOne = () => {
+  const access = localStorage.getItem('access').toString()
+  axios.get(`http://localhost:3000/user/searchOne?name=${from.search.name}`, {
+    headers: {
+      Authorization: `Bearer ${access}`,
+    }
+  }).then((res) => {
+    if (res.data.code === 200) {
+      table.value = res.data
+      ElMessage({
+        type: "success",
+        message: res.data.message,
+      })
+    } else {
+      ElMessage({
+        type: "warning",
+        message: res.data.message,
+      })
+    }
+  })
+}
+//om
+onMounted(() => {
+  pullAll();
+})
 </script>
 
 <template>
   <div class="w-full h-full relative block overflow-hidden">
     <div class="w-[863px] h-full relative block mx-auto">
       <!-- 顶部功能栏 -->
-      <div class="w-full h-[100px] relative grid grid-cols-4 gap-3">
-        <div class="w-full h-full relative block text-center font-bold text-black leading-[100px]">
-          名称
-        </div>
-        <div class="w-full h-full relative flex">
-          <el-input v-model="value" clearable placeholder="搜索..." class="h-8 my-auto"/>
-        </div>
-        <div class="w-full h-full relative flex justify-center">
-          <el-button type="primary" icon="Plus" class="my-auto">搜索</el-button>
-        </div>
-        <div class="w-full h-full relative flex">
-          <el-button type="primary" icon="Plus" class="my-auto">添加好友/群聊</el-button>
-        </div>
+      <div class="w-full h-[100px] relative block py-4">
+        <el-form
+            v-model="from"
+            label-width="auto"
+            :inline="true"
+        >
+          <el-form-item label="搜索">
+            <el-input v-model="from.search.name" clearable prefix-icon="User" placeholder="请输入用户名" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="Search" @click="searchOne">搜索</el-button>
+          </el-form-item>
+          <el-form-item label="添加">
+            <el-input v-model="from.search.name" clearable prefix-icon="User" placeholder="请输入群聊名" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="Plus">添加好友群聊</el-button>
+          </el-form-item>
+        </el-form>
       </div>
       <!-- 主体表格 -->
       <div class="w-full table-1 relative block">
@@ -53,14 +102,15 @@ const table = ref([
             :data="table"
         >
           <el-table-column label="id" prop="id" />
-          <el-table-column label="头像" prop="img">
+          <el-table-column label="头像" prop="headPic">
             <template #default="scope">
               <div style="display: flex; align-items: center">
-                <el-avatar :src="scope.row.img" shape="square" />
+                <el-avatar :src="scope.row.headPic" shape="square" />
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="名称" prop="name" />
+          <el-table-column label="名称" prop="username" />
+          <el-table-column label="昵称" prop="nickName" />
           <el-table-column label="操作">
             <el-button type="text" size="small">聊天</el-button>
             <el-button type="text" size="small">添加</el-button>
@@ -70,7 +120,7 @@ const table = ref([
       <!-- 分页器 -->
       <div class="w-full h-14 relative flex">
         <div class="w-auto h-auto relative ml-auto my-auto">
-          <el-pagination layout="prev, pager, next" :total="50" />
+          <el-pagination layout="prev, pager, next" :total="total" />
         </div>
       </div>
     </div>

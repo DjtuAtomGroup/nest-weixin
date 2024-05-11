@@ -3,6 +3,7 @@ import { useRouter } from "vue-router";
 import { reactive } from "vue";
 import {ElMessage} from "element-plus";
 import {Lock, User} from "@element-plus/icons-vue";
+import axios from "axios";
 
 //router
 const router = useRouter()
@@ -13,18 +14,30 @@ const loginForm = reactive({
 })
 //login
 const loginSubmit = () => {
- if (loginForm.username && loginForm.password) {
-   router.push('/layout')
-   ElMessage({
-     type: "success",
-     message: '登陆成功'
-   })
- } else {
-   ElMessage({
-     type: "warning",
-     message: '用户名或密码错误',
-   })
- }
+  axios.post('http://localhost:3000/user/login',{
+    username: loginForm.username,
+    password: loginForm.password,
+  },{
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    }
+  }).then((res) => {
+    if (res.data.code === 200) {
+      router.push('/layout')
+      localStorage.setItem('access',res.data.accessToken) //保存 access token 和 refresh token
+      console.log(res.data.accessToken)
+      localStorage.setItem('refresh',res.data.refreshToken)
+      ElMessage({
+        type: "success",
+        message: '登陆成功'
+      })
+    } else {
+      ElMessage({
+        type: "warning",
+        message: res.data.message,
+      })
+    }
+  })
 }
 //register form
 const registerForm = reactive({

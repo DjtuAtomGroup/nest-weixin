@@ -1,5 +1,30 @@
 <script setup>
 import SiderBar from "@/components/SideBar/SiderBar.vue";
+import { onMounted } from "vue";
+import axios from "axios";
+
+//captcha
+const captcha = (access) => {
+  axios.post(`http://localhost:3000/user/refresh?token=${access}`).then((res) => {
+    //刷新 access token
+    localStorage.setItem('access',res.data.access);
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+//refresh
+const refresh = () => {
+  const access = localStorage.getItem('refresh').toString();
+  setInterval(() => {
+    captcha(access);
+  },30000)
+}
+
+//refresh access token per 5min
+//om
+onMounted(() => {
+  refresh()
+})
 </script>
 
 <template>
