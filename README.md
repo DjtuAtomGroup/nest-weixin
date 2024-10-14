@@ -1,6 +1,7 @@
-# nest-weixin
+# vue 仿微信前端项目
 
 This template should help get you started developing with Vue 3 in Vite.
+基于 Vue 3 和 Vite.
 
 ## Recommended IDE Setup
 
@@ -10,20 +11,28 @@ This template should help get you started developing with Vue 3 in Vite.
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
+## 启动项目
 
+### 进入项目目录
+```sh
+cd project-folder
+```
+
+### 使用npm install
 ```sh
 npm install
 ```
 
 ### Compile and Hot-Reload for Development
 
+### 启动项目
 ```sh
 npm run dev
 ```
 
 ### Compile and Minify for Production
 
+### 项目打包
 ```sh
 npm run build
 ```
